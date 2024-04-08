@@ -1,4 +1,4 @@
-import { Injectable, Logger, NotFoundException, OnModuleInit } from '@nestjs/common';
+import { HttpStatus, Injectable, Logger, OnModuleInit } from '@nestjs/common';
 import { RpcException } from '@nestjs/microservices';
 import { PrismaClient } from '@prisma/client';
 
@@ -83,5 +83,24 @@ export class ProductsService extends PrismaClient implements OnModuleInit {
         available: false,
       }
     })
+  }
+
+  async validateProducts(ids: number[]) {
+    const products = await this.products.findMany({
+      where: {
+        id: {
+          in: ids
+        }
+      }
+    })
+
+    if (ids.length !== products.length) {
+      throw new RpcException({
+        status: HttpStatus.NOT_FOUND,
+        message: 'Some products were not found',
+      })
+    }
+
+    return products;
   }
 }
