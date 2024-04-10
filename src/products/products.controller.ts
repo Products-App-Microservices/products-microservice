@@ -12,7 +12,7 @@ import { UpdateProductDto } from './dto/update-product.dto';
 export class ProductsController {
   constructor(private readonly productsService: ProductsService) {}
 
-  @MessagePattern({ cmd: 'create' })
+  @MessagePattern({ cmd: 'create_product' })
   create(@Payload() createProductDto: CreateProductDto) {
     return this.productsService.create(createProductDto);
   }
@@ -37,7 +37,7 @@ export class ProductsController {
     return this.productsService.remove(id);
   }
 
-  @MessagePattern({ cmd: 'validate_product' })
+  @MessagePattern({ cmd: 'validate_products' })
   validateProduct(@Payload() ids: number[]) {
     return this.productsService.validateProducts(ids);
   }
